@@ -1,5 +1,8 @@
 var assert = require('chai').assert;
 var Character = require('../src/character.js')
+var MeleeFighter = require('../src/melee-fighter.js');
+var RangedFighter = require('../src/ranged-fighter.js');
+var Fight = require('../src/fight.js');
 
 describe('Character', () => {
 
@@ -95,4 +98,41 @@ describe('Character', () => {
 
             assert.equal(target.health, 850);
         })
+
+        it('has an attack max range', ()=>{
+            var character = new Character();
+            assert.isDefined(character.maxRange);
+        })
+
+        describe('Melee Fighters', () => {
+
+            it('has max Range of 2', ()=>{
+                var melee = new MeleeFighter();
+                assert.equal(melee.maxRange, 2);
+            })
+        })
+
+        describe('Ranged Fighters', () => {
+
+            it('has max Range of 20', ()=>{
+                var melee = new RangedFighter();
+                assert.equal(melee.maxRange, 20);
+            })
+        })
+
+        it('can not deal damage to the target if it is out of range', ()=>{
+
+            var playerOne = new RangedFighter();
+            var playerTwo = new MeleeFighter();
+
+            var fight = new Fight(playerOne, playerTwo);
+            fight.range = 20;
+
+            fight.damageToPlayerTwo(100);
+            fight.damageToPlayerOne(100);
+
+            assert.equal(playerTwo.health, 900);
+            assert.equal(playerOne.health, 1000);
+        })
+
 });
