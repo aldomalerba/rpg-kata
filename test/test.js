@@ -16,10 +16,11 @@ describe('Character', () => {
         it('testDealDemageToCharacter', () => {
 
             var character = new Character();
-            
-            character.demage(100);
+            var victim = new Character();
 
-            assert.equal(character.health, 900);
+            character.dealDemage(victim);
+
+            assert.equal(victim.health, 900);
         })
 
         it('testDemageExeedsHealth', () => {
