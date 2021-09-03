@@ -1,0 +1,15 @@
+{
+  "name": "rpg-kata",
+  "version": "1.0.0",
+  "description": "rpg kata",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Aldo Malerba",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.1"
+  }
+}
