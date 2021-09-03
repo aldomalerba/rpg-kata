@@ -11,11 +11,17 @@ module.exports = class Character {
 
     dealDamage(victim, qty) {
 
-        if(Object.is(this, victim)) return;
+        if(Object.is(this, victim) || this.isAlly(victim)) return;
 
         var newDamage = this.getDamage(victim, qty);
 
-        victim.damage(newDamage);
+        if(victim.health <= newDamage) {
+            victim.health = 0;
+            victim.alive = false;
+            return;
+        }
+
+        victim.health -= newDamage;
     }
 
     getDamage(victim, qty){
@@ -26,16 +32,6 @@ module.exports = class Character {
         return qty;
     }
 
-    damage(qty){
-        if(this.health <= qty) {
-            this.health = 0;
-            this.alive = false;
-            return;
-        }
-
-        this.health -= qty;
-    }
-
     heal(qty){
 
         if(!this.alive) return;
@@ -43,5 +39,31 @@ module.exports = class Character {
 
         this.health += qty;
     }
+
+    joinFaction = (factionName) => this.factions.push(factionName);
+    
+    leaveFaction = (factionName) => {
+        this.factions = this.factions.filter( faction => faction !== factionName);
+    }
+
+    isAlly(character){
+
+        var allies = false;
+        
+        for(var factionName of this.factions) {
+
+            var findedFaction = character.factions.find(faction => faction == factionName);
+
+            if(findedFaction){
+                allies = true;
+                break;
+            }
+        }
+
+        return allies;
+    }
+
+    healAlly = (ally, qty) => ally.heal(qty);
+    
 
 }

@@ -136,4 +136,58 @@ describe('Character', () => {
             assert.equal(playerOne.health, 1000);
         })
 
+        it('can join and leave a faction called factionA', ()=>{
+
+            var playerOne = new Character();
+            playerOne.joinFaction('factionA');
+
+            assert.deepEqual(playerOne.factions, ['factionA']);
+
+            playerOne.leaveFaction('factionA');
+
+            assert.deepEqual(playerOne.factions, []);
+        })
+
+        it('can check if another character is his ally',() => {
+            var playerOne = new Character();
+            var playerTwo = new Character();
+
+            playerOne.joinFaction('factionA');
+            playerTwo.joinFaction('factionA');
+
+            assert.isTrue(playerOne.isAlly(playerTwo));
+        })
+
+        it('can not deal damage to the target if they are allies', ()=>{
+
+            var playerOne = new Character();
+            var playerTwo = new Character();
+
+            playerOne.joinFaction('factionA');
+            playerTwo.joinFaction('factionA');
+
+            playerOne.dealDamage(playerTwo, 100);
+
+            assert.equal(playerTwo.health, 1000);
+
+        })
+
+        it('can heal his ally', ()=>{
+
+            var playerOne = new Character();
+            var playerTwo = new Character();
+            var playerThree = new Character();
+
+            playerOne.joinFaction('factionA');
+            playerTwo.joinFaction('factionA');
+
+            playerThree.dealDamage(playerTwo, 100);
+            playerOne.healAlly(playerTwo, 100);
+
+            assert.equal(playerTwo.health, 1000);
+
+        })
+
+
+
 });
