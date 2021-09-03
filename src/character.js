@@ -11,10 +11,17 @@ module.exports = class Character {
 
         if(Object.is(this, victim)) return;
 
+        var newDamage = this.getDamage(victim, qty);
+
+        victim.damage(newDamage);
+    }
+
+    getDamage(victim, qty){
+
         if(victim.level - this.level >= 5) qty -= qty * 0.5;
         if(this.level - victim.level >= 5) qty += qty * 0.5;
 
-        victim.damage(qty);
+        return qty;
     }
 
     damage(qty){
