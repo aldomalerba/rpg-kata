@@ -6,13 +6,14 @@ var Fight = require('../src/fight.js');
 
 describe('Character', () => {
 
-        it('starts with health 1000, level 1 and alive true', () => {
+        it('starts with health 1000, level 1 and alive true, belong to no factions', () => {
 
             var character = new Character();
 
             assert.equal(character.health, 1000);
             assert.equal(character.level, 1);
             assert.equal(character.alive, true);
+            assert.lengthOf(character.factions, 0);
 
         })
 

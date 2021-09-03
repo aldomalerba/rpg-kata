@@ -6,6 +6,7 @@ module.exports = class Character {
         this.level = 1;
         this.alive = true;
         this.maxRange = null;
+        this.factions = [];
     }
 
     dealDamage(victim, qty) {
