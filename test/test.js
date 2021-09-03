@@ -2,7 +2,6 @@ var assert = require('chai').assert;
 var Character = require('../src/character.js')
 describe('Character', () => {
 
-        
         it('testCharacterInitialization', () => {
 
             var character = new Character();
@@ -18,7 +17,7 @@ describe('Character', () => {
             var character = new Character();
             var victim = new Character();
 
-            character.dealDemage(victim);
+            character.demage(victim, 100);
 
             assert.equal(victim.health, 900);
         })
@@ -26,40 +25,45 @@ describe('Character', () => {
         it('testDemageExeedsHealth', () => {
 
             var character = new Character();
+            var victim = new Character();
 
-            character.demage(1001);
+            character.demage(victim, 1001);
 
-            assert.equal(character.health, 0);
-            assert.equal(character.alive, false);
+            assert.equal(victim.health, 0);
+            assert.equal(victim.alive, false);
         })
 
         it('testHealCharacter', () => {
             var character = new Character();
+            var healed = new Character();
 
-            character.demage(500);
-            character.heal(100);
+            character.demage(healed, 500);
+            character.heal(healed, 100);
 
-            assert.equal(character.health, 600);
+            assert.equal(healed.health, 600);
 
         })
 
         it('testHealToDeadCharacter', () => {
-            var character = new Character();
+            var characterA = new Character();
+            var characterB  = new Character();
 
-            character.demage(1001);
-            character.heal(100);
+            characterA.demage(characterB, 1001);
+            characterA.heal(characterB, 100);
 
-            assert.equal(character.health, 0);
+            assert.equal(characterB.health, 0);
 
         })
 
         it('testHealingAbove1000', () => {
-            var character = new Character();
+            var characterA = new Character();
+            var characterB = new Character();
 
-            character.demage(500);
-            character.heal(600);
+            
+            characterA.demage(characterB, 500);
+            characterA.heal(characterB, 600);
 
-            assert.equal(character.health, 500);
-
+            assert.equal(characterB.health, 500);
+            
         })
 });

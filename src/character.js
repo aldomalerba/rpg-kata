@@ -7,20 +7,20 @@ module.exports = class Character {
         this.alive = true;
     }
 
-    demage(demage) {
-        if(this.health <= demage) {
-            this.health = 0;
-            this.alive = false;
+    demage(victim, qty) {
+        if(victim.health <= qty) {
+            victim.health = 0;
+            victim.alive = false;
             return;
         }
-        this.health -= demage;
+        victim.health -= qty;
     }
 
-    heal(heal){
-        
-        if(!this.alive) return;
-        if(this.health + heal > 1000) return;
+    heal(character, qty){
+        if(!character.alive) return;
+        if(character.health + qty > 1000) return;
 
-        this.health += heal;;
+        character.health += qty;
     }
+
 }
