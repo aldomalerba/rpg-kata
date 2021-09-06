@@ -2,7 +2,7 @@ var assert = require('chai').assert;
 var Character = require('../src/character.js')
 var MeleeFighter = require('../src/melee-fighter.js');
 var RangedFighter = require('../src/ranged-fighter.js');
-var Fight = require('../src/fight.js');
+var Tree = require('../src/tree.js');
 
 describe('Character', () => {
 
@@ -34,18 +34,19 @@ describe('Character', () => {
 
             character.dealDamage(victim, 1001);
 
-            assert.equal(victim.health, 0);
-            assert.equal(victim.alive, false);
+            assert.isTrue(victim.isDead());
+
         })
 
-        it('increases health by 100 after "heal(100)" is called', () => {
+
+        it('increases health by 100 after heal is called', () => {
             var character = new Character();
-            var healed = new Character();
+            var victim = new Character();
 
-            character.dealDamage(healed, 500);
-            healed.heal(100);
+            character.dealDamage(victim, 500);
+            victim.heal(victim,100);
 
-            assert.equal(healed.health, 600);
+            assert.equal(victim.health, 600);
 
         })
 
@@ -54,11 +55,23 @@ describe('Character', () => {
             var characterB  = new Character();
 
             characterA.dealDamage(characterB, 1001);
-            characterB.heal(100);
+            characterB.heal(characterB, 100);
 
             assert.equal(characterB.health, 0);
 
         })
+
+        it('can increases health only to hisself', () => {
+
+            var characterA = new Character();
+            var characterB = new Character();
+
+            characterA.health = 500;
+
+            characterB.heal(characterA, 100);
+            
+            assert.equal(characterA.health, 500);
+        });
 
         it('testHealingAbove1000', () => {
             var characterA = new Character();
@@ -125,12 +138,11 @@ describe('Character', () => {
 
             var playerOne = new RangedFighter();
             var playerTwo = new MeleeFighter();
+            const range = 20;
+            const damageAmount = 100;
 
-            var fight = new Fight(playerOne, playerTwo);
-            fight.range = 20;
-
-            fight.damageToPlayerTwo(100);
-            fight.damageToPlayerOne(100);
+            playerOne.dealDamage(playerTwo, damageAmount, range);
+            playerTwo.dealDamage(playerOne, damageAmount, range);
 
             assert.equal(playerTwo.health, 900);
             assert.equal(playerOne.health, 1000);
@@ -182,12 +194,48 @@ describe('Character', () => {
             playerTwo.joinFaction('factionA');
 
             playerThree.dealDamage(playerTwo, 100);
-            playerOne.healAlly(playerTwo, 100);
+            playerOne.heal(playerTwo, 100);
 
             assert.equal(playerTwo.health, 1000);
 
         })
 
+        it('it can not deal damage to target without health', () => {
+            var playerOne = new Character();
+            var target = {};
+            var message = '';
+            try{
+                playerOne.dealDamage(target, 50);
+            }catch(err){
+                message = err.message;
+            }
 
+            assert.equal(message, 'Deal damage to a target without health is not possible');
+
+        })
+
+        it('it can not heal non-character things', () => {
+            var character = new Character();
+            var target = {
+                health: 500
+            };
+
+            character.heal(target, 100);
+            assert.equal(target.health, 500);
+        })
 
 });
+
+describe('Non-Character Things', () => {
+
+    it('is destroyed when health is 0', () => {
+
+        var character = new Character();
+        var tree = new Tree();
+        character.dealDamage(tree,2500);
+
+        assert.equal(tree.health, 0);
+        assert.equal(tree.destroyed, true);
+
+    })
+})

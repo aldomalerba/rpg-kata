@@ -1,5 +1,5 @@
 
-module.exports = class Character {
+module.exports = class Character{
 
     constructor() {
         this.health = 1000;
@@ -9,35 +9,58 @@ module.exports = class Character {
         this.factions = [];
     }
 
-    dealDamage(victim, qty) {
+    dealDamage(victim, damageAmount, range = null) {
 
-        if(Object.is(this, victim) || this.isAlly(victim)) return;
+        if(victim.health === undefined )
+            throw new Error('Deal damage to a target without health is not possible');
 
-        var newDamage = this.getDamage(victim, qty);
+        var newDamage = this.calculateDamage(victim, damageAmount, range);
 
-        if(victim.health <= newDamage) {
-            victim.health = 0;
-            victim.alive = false;
+        if(newDamage >= victim.health) {
+            victim.die();
             return;
         }
 
         victim.health -= newDamage;
     }
 
-    getDamage(victim, qty){
-
-        if(victim.level - this.level >= 5) qty -= qty * 0.5;
-        if(this.level - victim.level >= 5) qty += qty * 0.5;
-
-        return qty;
+    die() {
+        this.health = 0;
+        this.alive = false;
     }
 
-    heal(qty){
+    isSelf = character => Object.is(this, character);
 
-        if(!this.alive) return;
-        if(this.health + qty > 1000) return;
+    isNotSelf = (character) => !this.isSelf(character);
 
-        this.health += qty;
+    isAlive = () => this.alive;
+
+    isDead = () => !this.isAlive();
+
+    isOutOfMaxRange = (range) => range > this.maxRange;
+
+    calculateDamage(victim, damageAmount, range){
+
+        if(this.isSelf(victim) || 
+            this.isAlly(victim) ||
+            this.isOutOfMaxRange(range)) return 0;
+
+        if(victim.level - this.level >= 5) damageAmount -= damageAmount * 0.5;
+        if(this.level - victim.level >= 5) damageAmount += damageAmount * 0.5;
+
+        return damageAmount;
+    }
+
+    heal(character, qty){
+
+        if(this.canHeal(character, qty)) character.health += qty;
+
+    }
+
+    canHeal(character, qty) {
+        return (this.isSelf(character) || this.isAlly(character)) &&
+            character.isAlive() &&
+            character.health + qty <= 1000;
     }
 
     joinFaction = (factionName) => this.factions.push(factionName);
@@ -63,7 +86,7 @@ module.exports = class Character {
         return allies;
     }
 
-    healAlly = (ally, qty) => ally.heal(qty);
+    isNotAlly = (character) => !this.isAlly(character);
     
 
 }
