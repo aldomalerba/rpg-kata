@@ -73,7 +73,7 @@ describe('Character', () => {
             assert.equal(characterA.health, 500);
         });
 
-        it('testHealingAbove1000', () => {
+        it('can not raise health above 1000', () => {
             var characterA = new Character();
             var characterB = new Character();
 
@@ -85,7 +85,7 @@ describe('Character', () => {
             
         })
 
-        it('testCharacterDemageItself',()=> {
+        it('can not deal damage to hisself',()=> {
             var character = new Character();
             character.dealDamage(character, 100);
             assert.equal(character.health, 1000);
