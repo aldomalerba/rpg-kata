@@ -8,4 +8,8 @@ module.exports = class Prop {
         this.health = 0;
         this.destroyed = true;
     }
+
+    canBeTarget = () => !this.destroyed;
+
+    isDestroyed = () => this.destroyed;
 }

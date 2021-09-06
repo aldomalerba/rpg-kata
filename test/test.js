@@ -202,10 +202,12 @@ describe('Character', () => {
 
         it('it can not deal damage to target without health', () => {
             var playerOne = new Character();
-            var target = {};
+            var tree = new Tree();
+            tree.destroyed = true;
             var message = '';
+
             try{
-                playerOne.dealDamage(target, 50);
+                playerOne.dealDamage(tree, 50);
             }catch(err){
                 message = err.message;
             }

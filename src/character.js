@@ -10,8 +10,8 @@ module.exports = class Character{
     }
 
     dealDamage(victim, damageAmount, range = null) {
-
-        if(victim.health === undefined )
+        
+        if(!victim.canBeTarget())
             throw new Error('Deal damage to a target without health is not possible');
 
         var newDamage = this.calculateDamage(victim, damageAmount, range);
@@ -23,6 +23,8 @@ module.exports = class Character{
 
         victim.health -= newDamage;
     }
+
+    canBeTarget = () => true;
 
     die() {
         this.health = 0;
